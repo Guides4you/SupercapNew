@@ -1,0 +1,6 @@
+if BOARD_G4Y_BEACON_SUPERCAP
+
+config BT_CTLR
+	default BT
+
+endif # BOARD_G4Y_BEACON_SUPERCAP

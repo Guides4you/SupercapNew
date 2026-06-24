@@ -1,0 +1,5 @@
+board:
+  name: g4y_beacon_supercap
+  vendor: G4y
+  socs:
+    - name: nrf52805

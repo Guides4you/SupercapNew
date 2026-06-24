@@ -1,0 +1,108 @@
+// Copyright (c) 2023 Nordic Semiconductor ASA
+// SPDX-License-Identifier: Apache-2.0
+
+/dts-v1/;
+#include <nordic/nrf52805_caaa.dtsi>
+
+/ {
+	model = "G4y_Beacon_SuperCap";
+	compatible = "g4y,g4y-beacon-supercap";
+
+	chosen {
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+	};
+};
+
+&flash0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		boot_partition: partition@0 {
+			label = "mcuboot";
+			reg = <0x0 0xc000>;
+		};
+		slot0_partition: partition@c000 {
+			label = "image-0";
+			reg = <0xc000 0xa000>;
+		};
+		slot1_partition: partition@16000 {
+			label = "image-1";
+			reg = <0x16000 0xa000>;
+		};
+		scratch_partition: partition@20000 {
+			label = "image-scratch";
+			reg = <0x20000 0xa000>;
+		};
+		storage_partition: partition@2a000 {
+			label = "storage";
+			reg = <0x2a000 0x6000>;
+		};
+	};
+};
+
+&pinctrl {
+	i2c0_default: i2c0_default {
+		group1 {
+			psels = <NRF_PSEL(TWIM_SDA, 0, 18)>,
+				<NRF_PSEL(TWIM_SCL, 0, 16)>;
+		};
+	};
+
+	i2c0_sleep: i2c0_sleep {
+		group1 {
+			psels = <NRF_PSEL(TWIM_SDA, 0, 18)>,
+				<NRF_PSEL(TWIM_SCL, 0, 16)>;
+			low-power-enable;
+		};
+	};
+
+	spi0_default: spi0_default {
+		group1 {
+			psels = <NRF_PSEL(SPIM_SCK, 0, 14)>,
+				<NRF_PSEL(SPIM_MOSI, 0, 5)>,
+				<NRF_PSEL(SPIM_MISO, 0, 2)>;
+		};
+	};
+
+	spi0_sleep: spi0_sleep {
+		group1 {
+			psels = <NRF_PSEL(SPIM_SCK, 0, 14)>,
+				<NRF_PSEL(SPIM_MOSI, 0, 5)>,
+				<NRF_PSEL(SPIM_MISO, 0, 2)>;
+			low-power-enable;
+		};
+	};
+};
+
+
+
+
+&i2c0 {
+	compatible = "nordic,nrf-twi";
+	/* Cannot be used together with spi1. */
+	 status = "okay"; 
+	pinctrl-0 = <&i2c0_default>;
+	pinctrl-1 = <&i2c0_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&spi0 {
+	compatible = "nordic,nrf-spi";
+	/* Cannot be used together with i2c0. */
+	/* status = "okay"; */
+	pinctrl-0 = <&spi0_default>;
+	pinctrl-1 = <&spi0_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&gpiote {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};

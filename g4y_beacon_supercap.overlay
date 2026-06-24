@@ -1,0 +1,175 @@
+// To get started, press Ctrl+Space to bring up the completion menu and view the available nodes.
+
+// You can also use the buttons in the sidebar to perform actions on nodes.
+// Actions currently available include:
+
+// * Enabling / disabling the node
+// * Adding the bus to a bus
+// * Removing the node
+// * Connecting ADC channels
+
+// For more help, browse the DeviceTree documentation at https://docs.zephyrproject.org/latest/guides/dts/index.html
+// You can also visit the nRF DeviceTree extension documentation at https://nrfconnect.github.io/vscode-nrf-connect/devicetree/nrfdevicetree.html
+
+&uart0 {
+	status = "disabled";
+};
+
+
+&i2c0 {
+    clock-frequency = <I2C_BITRATE_FAST>;
+    status = "okay";
+};
+
+
+&timer0 {
+    status = "disabled";
+};
+
+&timer1 {
+    status = "disabled";
+};
+
+&timer2 {
+    status = "disabled";
+};
+
+
+/ {
+    model = "Nordic nRF52 DK NRF52832";
+    compatible = "nordic,nrf52-dk-nrf52832";
+
+    leds {
+        compatible = "gpio-leds";
+
+        epreset: ep_reset {
+            gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+            label = "Epaper reset pin";
+        };
+
+        epdc: ep_dc {
+            gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+            label = "Epaper DC pin";
+        };
+
+        csgpios: cs_gpios {
+            gpios = <&gpio0 21 GPIO_ACTIVE_HIGH>;
+            label = "Epaper CS pin";
+        };
+
+        pwrgpios: pwr_gpios {
+            gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
+            label = "3V3 Power";
+        };
+
+    };
+
+    buttons {
+        compatible = "gpio-keys";
+        epbusy: ep_busy {
+            gpios = <&gpio0 12  GPIO_ACTIVE_HIGH>;
+            label = "Epaper BUSY pin";
+        };
+
+        nfcgpo: nfc_gpo {
+            gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+            label = "NFC GPO pin";
+        };
+    };
+};
+
+&spi0 {
+	status = "okay";
+};
+
+&spi0_default {
+    group1 {
+        psels = <NRF_PSEL(SPIM_MOSI, 0, 5)>,
+                <NRF_PSEL(SPIM_MISO, 0, 2)>,
+                <NRF_PSEL(SPIM_SCK, 0, 14)>;
+    };
+};
+
+&i2c0_default {
+    group2 {
+        psels = <NRF_PSEL(TWIM_SCL, 0, 16)>, <NRF_PSEL(TWIM_SDA, 0, 18)>;
+        nordic,drive-mode = <NRF_DRIVE_H0H1>;
+    };
+};
+/delete-node/ &{/pin-controller/i2c0_default/group1/};
+
+&bprot {
+    status = "okay";
+};
+
+&wdt {
+    status = "disabled";
+};
+
+&rng {
+    status = "okay";
+};
+
+&rtc0 {
+    status = "disabled";
+};
+
+&rtc1 {
+    status = "disabled";
+};
+
+&swi2 {
+    status = "disabled";
+};
+
+&swi3 {
+    status = "disabled";
+};
+
+&swi4 {
+    status = "disabled";
+};
+
+&swi5 {
+    status = "disabled";
+};
+
+&temp {
+    status = "disabled";
+};
+
+&adc {
+    status = "disabled";
+
+  };
+&uicr {
+    status = "disabled";
+};
+
+&clock {
+    status = "okay";
+};
+
+&ficr {
+    status = "disabled";
+};
+
+&spi0_sleep {
+
+    group2 {
+        psels = <NRF_PSEL(SPIM_SCK, 0, 14)>,
+                <NRF_PSEL(SPIM_MOSI, 0, 5)>,
+                <NRF_PSEL(SPIM_MISO, 0, 2)>;
+        nordic,invert;
+        low-power-enable;
+    };
+};
+/delete-node/ &{/pin-controller/spi0_sleep/group1/};
+
+&i2c0_sleep {
+
+    group2 {
+        psels = <NRF_PSEL(TWIM_SCL, 0, 16)>, <NRF_PSEL(TWIM_SDA, 0, 18)>;
+    };
+};
+/delete-node/ &{/pin-controller/i2c0_sleep/group1/};
