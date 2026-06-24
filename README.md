@@ -42,7 +42,8 @@ nrfjprog --eraseuicr -f NRF52
 ## TAG configuration
 - **Purpose**: TAGs are programmed with a **URI string** (web address) and an optional text configuration file.  
 - **Configuration format**: `+pwr+adv+ep`  
-- **pwr** — Bluetooth transmit power (integer). 
+- **pwr** — Bluetooth transmit power (integer).
+  
 | pwr value | nRF52 TX Power Setting               |
 |-----------|--------------------------------------|
 | 0         | -40 dBm                              |
