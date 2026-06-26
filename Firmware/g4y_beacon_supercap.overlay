@@ -17,7 +17,7 @@
 
 
 &i2c0 {
-    clock-frequency = <I2C_BITRATE_FAST>;
+    clock-frequency = <I2C_BITRATE_STANDARD>;
     status = "okay";
 };
 
@@ -91,9 +91,13 @@
 };
 
 &i2c0_default {
-    group2 {
-        psels = <NRF_PSEL(TWIM_SCL, 0, 16)>, <NRF_PSEL(TWIM_SDA, 0, 18)>;
+    scl_group {
+        psels = <NRF_PSEL(TWIM_SCL, 0, 16)>;
         nordic,drive-mode = <NRF_DRIVE_H0H1>;
+    };
+    sda_group {
+        psels = <NRF_PSEL(TWIM_SDA, 0, 18)>;
+        nordic,drive-mode = <NRF_DRIVE_H0D1>;
     };
 };
 /delete-node/ &{/pin-controller/i2c0_default/group1/};
