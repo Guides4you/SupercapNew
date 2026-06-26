@@ -68,7 +68,7 @@ K_SEM_DEFINE(nfc_gpo_sem, 0, 1);
 
 #define Power_DI() \
 	k_msleep(20);  \
-	gpio_pin_configure_dt(&pwr_pin, GPIO_DISCONNECTED)
+	gpio_pin_set_dt(&pwr_pin, 1)
 
 uint8_t beacon_data[URL_BUFFER + 6] = {0};
 
@@ -266,7 +266,7 @@ int main(void)
 
 	set_tx_power(BT_HCI_VS_LL_HANDLE_TYPE_ADV, 0, bt_power);
 
-	NfcTag_setEnergyHarvesting(true);
+	NfcTag_setEnergyHarvesting(false);
 	NfcTag_GoSleep();
 	if (epaper == 1)
 	{
@@ -285,13 +285,13 @@ int main(void)
 		{
 			Power_EN();
 			NfcTag_Resume();
-			NfcTag_setEnergyHarvesting(false);
+			//NfcTag_setEnergyHarvesting(false);
 			if (NfcTag_wasRfWriteEvent() &&
 				(NFCGetData(&buffer_check_URL[0], &check_power, &check_adv, &check_epaper) != NFC_ERROR_READ))
 			{
 				if ((strcmp(buffer_check_URL, buffer_URL) != 0) || (check_power != power) || (check_adv != adv) || (check_epaper != epaper))
 				{
-					NfcTag_setEnergyHarvesting(true);
+					//NfcTag_setEnergyHarvesting(true);
 					sys_reboot(SYS_REBOOT_COLD);
 				}
 				else
@@ -302,7 +302,7 @@ int main(void)
 					check_epaper = 0xFF;
 				}
 			}
-			NfcTag_setEnergyHarvesting(true);
+			//NfcTag_setEnergyHarvesting(true);
 			NfcTag_GoSleep();
 			Power_DI();
 		}

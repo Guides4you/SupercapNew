@@ -4,8 +4,13 @@
 #include <errno.h>
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
+#include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/sys/util.h>
+
+/* I2C pins (TWIM SCL = P0.16) */
+#define I2C_GPIO_DEV    DEVICE_DT_GET(DT_NODELABEL(gpio0))
+#define I2C_SCL_PIN     16
 #include <zephyr/pm/pm.h>
 #include <zephyr/pm/policy.h>
 #include <zephyr/pm/device.h>
@@ -58,8 +63,10 @@ void NfcTag_init(void)
 
 void NfcTag_GoSleep(void)
 {
-
-     pm_device_action_run(i2c_nfc, PM_DEVICE_ACTION_SUSPEND);
+    /* Fissa SCL a LOW, poi sospende il periferico I2C. */
+    pm_device_action_run(i2c_nfc, PM_DEVICE_ACTION_SUSPEND);
+    gpio_pin_configure(I2C_GPIO_DEV, I2C_SCL_PIN, GPIO_OUTPUT);
+    gpio_pin_set(I2C_GPIO_DEV, I2C_SCL_PIN, 0);
 }
 
 void NfcTag_Resume(void)

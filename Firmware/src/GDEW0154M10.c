@@ -103,10 +103,13 @@ void GDE_Sleep(void)
 void GDE_Off(void)
 {
     pm_device_action_run(spi_dev, PM_DEVICE_ACTION_SUSPEND);
-    gpio_pin_configure_dt(&rst_pin, GPIO_DISCONNECTED);
-    gpio_pin_configure_dt(&DC_pin, GPIO_DISCONNECTED);
-    gpio_pin_configure_dt(&busy_pin, GPIO_DISCONNECTED);
-    gpio_pin_configure_dt(&cs_pin, GPIO_DISCONNECTED);
+
+    /* Porta tutti i pin in input per evitare correnti parassite
+     * quando l'alimentazione del display è spenta. */
+    gpio_pin_configure_dt(&rst_pin, GPIO_INPUT);
+    gpio_pin_configure_dt(&DC_pin, GPIO_INPUT);
+    gpio_pin_configure_dt(&busy_pin, GPIO_INPUT);
+    gpio_pin_configure_dt(&cs_pin, GPIO_INPUT);
 }
 
 void GDE_Reset(void)
